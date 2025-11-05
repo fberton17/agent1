@@ -130,17 +130,38 @@ AREA_ALIASES = {
 
 ## 🚀 Ejecución
 
-### Desarrollo
+### App Principal (con Home Assistant)
 
 ```bash
+# Desarrollo
+uvicorn src.app:app --host 0.0.0.0 --port 8000 --reload
+
+# O desde el módulo
 python -m src.app
 ```
 
-O directamente con uvicorn:
+### App de Prueba (solo WhatsApp + LLM)
+
+Para probar que la configuración de WhatsApp y el LLM funcionan correctamente **sin interactuar con Home Assistant**:
 
 ```bash
-uvicorn src.app:app --host 0.0.0.0 --port 8000 --reload
+# Desarrollo
+uvicorn src.test_app:app --host 0.0.0.0 --port 8000 --reload
+
+# O desde el módulo
+python -m src.test_app
 ```
+
+**Nota**: La app de prueba (`test_app.py`) solo requiere:
+- Variables de entorno de WhatsApp (`WA_VERIFY_TOKEN`, `WA_ACCESS_TOKEN`, `WA_PHONE_NUMBER_ID`)
+- Variable de entorno del LLM (`OPENAI_API_KEY` o equivalente)
+- **NO requiere** configuración de Home Assistant
+
+Úsala para verificar que:
+1. ✅ El webhook de WhatsApp funciona correctamente
+2. ✅ Los mensajes se reciben y procesan
+3. ✅ El LLM responde correctamente
+4. ✅ Los mensajes se envían de vuelta por WhatsApp
 
 ### Producción
 
@@ -175,7 +196,8 @@ El agente entiende español rioplatense y variaciones naturales del lenguaje.
 agent1/
 ├── src/                    # Código fuente del proyecto
 │   ├── __init__.py         # Inicialización del paquete
-│   ├── app.py              # FastAPI, webhook WhatsApp, arranque del agente
+│   ├── app.py              # FastAPI, webhook WhatsApp, arranque del agente (producción)
+│   ├── test_app.py         # App de prueba (solo WhatsApp + LLM, sin Home Assistant)
 │   ├── whatsapp.py         # Envío de mensajes por WhatsApp Cloud API
 │   ├── ha_client.py        # Cliente REST a Home Assistant
 │   ├── tools.py            # Tools del agente (encender, apagar, brillo, color, estado)
