@@ -1,3 +1,7 @@
+# Vercel
+.vercel
+.vercel/*
+
 # Python
 __pycache__/
 *.py[cod]
@@ -51,4 +55,3 @@ htmlcov/
 
 # Project specific
 structure.txt
-

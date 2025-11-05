@@ -1,8 +1,12 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+# Load .env file (only in local development, Vercel uses environment variables)
+# Vercel automatically provides environment variables, so dotenv is optional
+if os.path.exists(".env"):
+    load_dotenv()
 
+# PORT is not needed in Vercel (it's serverless), but keep for local development
 PORT = int(os.getenv("PORT", "8000"))
 
 # WhatsApp

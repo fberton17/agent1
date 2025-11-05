@@ -130,7 +130,9 @@ AREA_ALIASES = {
 
 ## 🚀 Ejecución
 
-### App Principal (con Home Assistant)
+### Desarrollo Local
+
+#### App Principal (con Home Assistant)
 
 ```bash
 # Desarrollo
@@ -163,9 +165,35 @@ python -m src.test_app
 3. ✅ El LLM responde correctamente
 4. ✅ Los mensajes se envían de vuelta por WhatsApp
 
-### Producción
+### Despliegue en Vercel (Recomendado)
 
-Para producción, usa un servidor WSGI como Gunicorn con Uvicorn workers:
+Este proyecto está configurado para desplegarse en Vercel como serverless functions.
+
+1. **Instala Vercel CLI** (opcional):
+```bash
+npm i -g vercel
+```
+
+2. **Configura las variables de entorno** en el dashboard de Vercel:
+   - Ve a tu proyecto → Settings → Environment Variables
+   - Agrega todas las variables de `env.example`
+
+3. **Despliega**:
+```bash
+vercel
+```
+
+O conecta tu repositorio de GitHub a Vercel para despliegues automáticos.
+
+4. **Configura el webhook de WhatsApp**:
+   - URL: `https://tu-proyecto.vercel.app/webhook`
+   - Token: El mismo que configuraste en `WA_VERIFY_TOKEN`
+
+📖 **Ver guía completa**: [VERCEL_DEPLOY.md](./VERCEL_DEPLOY.md)
+
+### Producción (Self-hosted)
+
+Para producción en tu propio servidor, usa un servidor WSGI como Gunicorn con Uvicorn workers:
 
 ```bash
 pip install gunicorn
@@ -194,19 +222,23 @@ El agente entiende español rioplatense y variaciones naturales del lenguaje.
 
 ```
 agent1/
+├── api/                    # Vercel serverless functions
+│   └── index.py            # Handler para Vercel
 ├── src/                    # Código fuente del proyecto
 │   ├── __init__.py         # Inicialización del paquete
-│   ├── app.py              # FastAPI, webhook WhatsApp, arranque del agente (producción)
+│   ├── app.py              # FastAPI, webhook WhatsApp, arranque del agente
 │   ├── test_app.py         # App de prueba (solo WhatsApp + LLM, sin Home Assistant)
 │   ├── whatsapp.py         # Envío de mensajes por WhatsApp Cloud API
 │   ├── ha_client.py        # Cliente REST a Home Assistant
 │   ├── tools.py            # Tools del agente (encender, apagar, brillo, color, estado)
 │   ├── agent.py            # Construcción del agente smolagents + system prompt
 │   ├── mapping.py          # Mapeo área→entity_ids y utilidades
-│   └── config.py           # Carga .env y settings
+│   └── config.py          # Carga .env y settings
 ├── requirements.txt        # Dependencias de Python
+├── vercel.json             # Configuración de Vercel
 ├── env.example             # Ejemplo de variables de entorno
 ├── .gitignore              # Archivos ignorados por Git
+├── VERCEL_DEPLOY.md        # Guía de despliegue en Vercel
 └── README.md               # Este archivo
 ```
 
